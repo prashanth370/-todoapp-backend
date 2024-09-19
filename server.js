@@ -165,10 +165,10 @@ app.delete('/tasks/:id', auth, async (req, res) => {
   }
 });
 
+// Server setup
 const PORT = process.env.PORT || 5000;
-
 app.listen(PORT, () => {
   console.log(`Server started on port ${PORT}`);
 });
 
-module.exports = app; // Add this line for Vercel deployment
+module.exports = app; // Export the app for Vercel deployment
