@@ -1,7 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs'); // Changed from bcrypt to bcryptjs
 const jwt = require('jsonwebtoken');
 const cors = require('cors');
 
@@ -9,7 +9,7 @@ const app = express();
 
 // Middleware
 app.use(cors({
-  origin: ['http://localhost:3000', 'https://todoapp-k89q.vercel.app/'],
+  origin: ['http://localhost:3000', 'https://todoapp-k89q.vercel.app'],
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true
 }));
@@ -80,6 +80,7 @@ app.post('/register', async (req, res) => {
       res.json({ token });
     });
   } catch (err) {
+    console.error(err);
     res.status(500).json({ msg: 'Server error during registration' });
   }
 });
@@ -101,6 +102,7 @@ app.post('/login', async (req, res) => {
       res.json({ token });
     });
   } catch (err) {
+    console.error(err);
     res.status(500).json({ msg: 'Server error during login' });
   }
 });
@@ -110,6 +112,7 @@ app.get('/tasks', auth, async (req, res) => {
     const tasks = await Task.find({ user: req.user.id });
     res.json(tasks);
   } catch (err) {
+    console.error(err);
     res.status(500).json({ msg: 'Server Error' });
   }
 });
@@ -127,6 +130,7 @@ app.post('/tasks', auth, async (req, res) => {
     const task = await newTask.save();
     res.json(task);
   } catch (err) {
+    console.error(err);
     res.status(500).json({ msg: 'Server Error' });
   }
 });
@@ -141,6 +145,7 @@ app.put('/tasks/:id', auth, async (req, res) => {
     task = await Task.findByIdAndUpdate(req.params.id, { $set: req.body }, { new: true });
     res.json(task);
   } catch (err) {
+    console.error(err);
     res.status(500).json({ msg: 'Server Error' });
   }
 });
@@ -155,6 +160,7 @@ app.delete('/tasks/:id', auth, async (req, res) => {
     await Task.findByIdAndDelete(req.params.id);
     res.json({ msg: 'Task removed' });
   } catch (err) {
+    console.error(err);
     res.status(500).json({ msg: 'Server Error' });
   }
 });
@@ -164,3 +170,5 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server started on port ${PORT}`);
 });
+
+module.exports = app; // Add this line for Vercel deployment
