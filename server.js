@@ -10,6 +10,7 @@ const app = express();
 // Middleware
 app.use(cors({
   origin: ['http://localhost:3000', 'https://todoapp-k89q.vercel.app/'],
+  methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true
 }));
 app.use(express.json());
