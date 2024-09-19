@@ -19,10 +19,12 @@ app.use(express.json());
 const mongoURI = process.env.MONGODB_URI;
 mongoose.connect(mongoURI, {
   useNewUrlParser: true,
-  useUnifiedTopology: true
+  useUnifiedTopology: true,
+  user: process.env.MONGO_USER,   // Added MongoDB user from environment variables
+  pass: process.env.MONGO_PASSWORD // Added MongoDB password from environment variables
 })
-.then(() => console.log('Connected to MongoDB!'))
-.catch(err => console.error('Could not connect to MongoDB...', err));
+  .then(() => console.log('Connected to MongoDB!'))
+  .catch(err => console.error('Could not connect to MongoDB...', err));
 
 // User model
 const userSchema = new mongoose.Schema({
@@ -61,6 +63,11 @@ const auth = (req, res, next) => {
     res.status(401).json({ msg: 'Token is not valid' });
   }
 };
+
+// Root route
+app.get('/', (req, res) => {
+  res.send('Welcome to the ToDo API!');
+});
 
 // Routes
 app.post('/register', async (req, res) => {
@@ -171,4 +178,4 @@ app.listen(PORT, () => {
   console.log(`Server started on port ${PORT}`);
 });
 
-module.exports = app; // Export the app for Vercel deployment
+module.exports = app;
